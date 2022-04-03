@@ -5,3 +5,63 @@ controllers:
 kernel:
     resource: ../src/Kernel.php
     type: annotation
+
+my_first_controller:
+    path: /my_first
+    controller: App\Controller\FirstController::index
+
+
+#Post Controller
+post_index:
+    path: /post
+    controller: App\Controller\PostController::index
+
+post_create:
+    path: /post/create
+    controller: App\Controller\PostController::create
+
+post_show:
+    path: /post/show/{id}
+    controller: App\Controller\PostController::show
+
+post_edit:
+    path: /post/edit/{id}
+    controller: App\Controller\PostController::edit
+
+post_store:
+    path: /post
+    controller: App\Controller\PostController::store
+    methods: [POST]
+
+post_update:
+    path: /post/show/{id}
+    controller: App\Controller\PostController::store
+    methods: [PUT]
+
+post_delete:
+    path: /post/{id}
+    controller: App\Controller\PostController::store
+    methods: [DELETE]
+
+#Home Controller
+home_index:
+    path: /
+    controller: App\Controller\HomeController::index
+
+home_price:
+    path: /home/price
+    controller: App\Controller\HomeController::price
+
+home_contact:
+    path: /home/contact
+    controller: App\Controller\HomeController::contact
+    methods: [GET|HEAD]
+
+home_sendMessage:
+    path: /home/contact
+    controller: App\Controller\HomeController::sendMessage
+    methods: [POST]
+
+mail_sendMail:
+    path: /home/sendMail/{id}
+    controller: App\Controller\MailController::sendMail
