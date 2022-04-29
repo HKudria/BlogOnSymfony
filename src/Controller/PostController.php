@@ -15,7 +15,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class PostController extends AbstractController
 {
-    public function index(Request $request)
+    public function index(ManagerRegistry $doctrine)
     {
 //        if($request->search){
 //            $posts =  Post::join('users','author_id', '=', 'users.id')
@@ -30,7 +30,8 @@ class PostController extends AbstractController
 //            ->orderBY('posts.created_at','desc')
 //            ->paginate(4);
 //
-        return $this->render('posts/index.html.twig');
+
+        return $this->render('posts/index.html.twig', ['posts' => $doctrine->getRepository(Post::class)->findAll()]);
     }
 
 
@@ -91,14 +92,14 @@ class PostController extends AbstractController
 //        return $this->render('');
     }
 
-    public function show($id)
+    public function show(int $id, ManagerRegistry $doctrine)
     {
-        $post = Post::join('users','author_id', '=', 'users.id')
-            ->find($id);
+        $post = $doctrine->getRepository(Post::class)->find($id);
         if(!$post){
-            return redirect()->route('post.index')->withErrors('Nie poprawna strona!');
+            $this->addFlash('danger', 'Nie poprawna strona!');
+            return $this->redirectToRoute('post_index')->withErrors();
         }
-        return view('posts.show',compact('post'));
+        return $this->render('posts/show.html.twig',['post'=>$post]);
     }
 
 
@@ -142,18 +143,18 @@ class PostController extends AbstractController
     }
 
 
-    public function destroy($id)
+    public function destroy($id, ManagerRegistry $doctrine)
     {
-        $post = Post::find($id);
+        $post = $doctrine->getRepository(Post::class)->find($id);
         if(!$post){
-            return redirect()->route('post.index')->withErrors('This page isn\'t correct');
+            $this->addFlash('danger', 'Nie poprawna strona!');
+            return $this->redirectToRoute('post_index')->withErrors();
         }
-        if($post->author_id != \Auth::user()->id  && \Auth::user()->role != 'admin'){
-            return redirect()->route('post.index')->withErrors('You don\'t have permission for it!');
-        }
+
+        $this->addFlash('success', 'Post był wycofany pomyslnie');
         $post->delete();
 
-        return redirect()->route('post.index')->with('success','Post was deleted successful!');
+        return $this->redirectToRoute('post_index');
 
     }
 }

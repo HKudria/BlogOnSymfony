@@ -2,6 +2,10 @@ body{
     background: #fff;
 }
 
+.blog{
+    display: block ruby;
+}
+
 nav{
     margin-bottom: 15px;
 }
@@ -14,7 +18,7 @@ nav{
     margin-bottom: 10px;
 }
 .card-img{
-    height: 200px;
+    height: 400px;
     background-position: center center;
     -webkit-background-size: cover;
     background-size: cover;

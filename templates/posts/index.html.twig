@@ -12,18 +12,19 @@
 {#            <a href="{{route('post.index')}}" class="btn btn-outline-primary">Show all posts</a>#}
 {#        @endif#}
 {#    @endif#}
-    <div class="row">
-{#        @foreach($posts as $post)#}
+{#    <div class="row">#}
+    <div class="blog">
+        {% for post in posts %}
             <div class="col-6">
                 <div class="card">
-{#                    <div class="card-header"><h2>{{$post->short_title}}</h2></div>#}
+                    <div class="card-header"><h2>{{ post.shortTitle}}</h2></div>
                     <div class="card-body">
-{#                        <div class="card-img" style="background-image: url({{$post->img ?? asset('/img/default.jpg')}})"></div>#}
-{#                       <a href="{{ route('post.show', ['id' => $post->post_id]) }}" class="btn btn-outline-primary">Show post</a>#}
+                        <div class="card-img" style="background-image: url({{ asset('uploads/posts/' ~ post.img) }})"></div>
+                       <a href="{{ path('post_show',{'id' : post.id}) }}" class="btn btn-outline-primary">Show post</a>
                     </div>
                 </div>
             </div>
-{#        @endforeach#}
+        {% endfor %}
     </div>
 {#    @if(!isset($_GET['search']))#}
 {#        {{$posts->links('vendor.pagination.bootstrap-4')}}#}
