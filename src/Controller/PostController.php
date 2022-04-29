@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Post;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -29,26 +32,38 @@ class PostController extends AbstractController
 
     public function create()
     {
-        return view('posts.create');
+        return $this->render('posts/create.html.twig');
     }
 
 
     //for check field we need create request php artisan make:request PostRequest
-    public function store(PostRequest $request)
+    public function store(Request $request, ManagerRegistry $doctrine)
     {
-        $post = new Post();
-        $post->title = $request->title;
-        $post->short_title = \Str::length($request->title)>30 ? \Str::substr($request->title,0,30). '...' : $request->title;
-        $post->author_id =\Auth::user()->id;
-        $post->descr = $request->descr;
-        if($request->file('img')){
-            $path = \Storage::putFile('public', $request->file('img'));
-            $url = \Storage::url($path);
-            $post->img = $url;
+        $id = null;
+        $submittedToken = $request->request->get('token');
+        if ($this->isCsrfTokenValid('send-mail', $submittedToken)) {
+            $entityManager = $doctrine->getManager();
+            $post = new Post();
+            $post->setTitle($request->request->get('title'));
+            $post->setShortTitle($request->request->get('title')->lenght() > 30 ? $request->request->get('title')->slice(0, 30). '...' :  $request->request->get('title'));
+//            $post->author_id = \Auth::user()->id;
+            $post->setDescr($request->request->get('descr'));
+            if ($request->file('img')) {
+                $path = \Storage::putFile('public', $request->file('img'));
+                $url = \Storage::url($path);
+                $post->img = $url;
+            }
+            $entityManager->persist($post);
+            $entityManager->flush();
+            $id = $post->getId();
         }
-        $post->save();
 
-        return redirect()->route('post.index')->with('success','Post zapisano z succesem!');
+        if ($id){
+            $this->addFlash('success','Post zapisano z succesem!');
+        } else {
+            $this->addFlash('danger', 'Wystąpil bląd. Prosze sprobować póżniej');
+        }
+        return $this->redirectToRoute('post_index');
     }
 
 

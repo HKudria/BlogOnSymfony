@@ -1,0 +1,13 @@
+
+{% extends 'layouts/layout.html.twig' %}
+{% block title %}Nowy post{% endblock %}
+{% block content %}
+
+    <form action="{{ path('post_store') }}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="token" value="{{ csrf_token('create-post') }}"/>
+        <h3>Create post</h3>
+        {{ include('posts/parts/form.html.twig') }}
+        <input type="submit" value="Create post" class="btn btn-outline-primary">
+    </form>
+
+{% endblock %}
