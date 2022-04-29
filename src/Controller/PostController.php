@@ -6,6 +6,7 @@ use App\Entity\Post;
 use App\Form\PostType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,7 +42,6 @@ class PostController extends AbstractController
 
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
-//        $submittedToken = $request->request->get('create_form');
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
@@ -74,6 +74,8 @@ class PostController extends AbstractController
                 // updates the 'brochureFilename' property to store the PDF file name
                 // instead of its contents
                 $post->setImg($newFilename);
+            } else {
+                $post->setImg('default.jpg');
             }
             $entityManager->persist($post);
             $entityManager->flush();
@@ -97,7 +99,7 @@ class PostController extends AbstractController
         $post = $doctrine->getRepository(Post::class)->find($id);
         if(!$post){
             $this->addFlash('danger', 'Nie poprawna strona!');
-            return $this->redirectToRoute('post_index')->withErrors();
+            return $this->redirectToRoute('post_index');
         }
         return $this->render('posts/show.html.twig',['post'=>$post]);
     }
@@ -105,54 +107,64 @@ class PostController extends AbstractController
 
     public function edit($id)
     {
-        $post = Post::find($id);
-        if(!$post){
-            return redirect()->route('post.index')->withErrors('Nie poprawna strona!');
-        }
-        if($post->author_id != \Auth::user()->id  && \Auth::user()->role != 'admin'){
-            return redirect()->route('post.index')->withErrors('You don\'t have permission for it!');
-        }
-        return view('posts.edit',compact('post'));
+//        $post = Post::find($id);
+//        if(!$post){
+//            return redirect()->route('post.index')->withErrors('Nie poprawna strona!');
+//        }
+//        if($post->author_id != \Auth::user()->id  && \Auth::user()->role != 'admin'){
+//            return redirect()->route('post.index')->withErrors('You don\'t have permission for it!');
+//        }
+//        return view('posts.edit',compact('post'));
     }
 
 
     public function update(Request $request, $id)
     {
-        $post = Post::find($id);
-        if(!$post){
-            return redirect()->route('post.index')->withErrors('Nie poprawna strona!');
-        }
-        if($post->author_id != \Auth::user()->id && \Auth::user()->role != 'admin'){
-            return redirect()->route('post.index')->withErrors('You don\'t have permission for it!');
-        }
-
-        $post->title = $request->title;
-        $post->short_title = \Str::length($request->title)>30 ? \Str::substr($request->title,0,30). '...' : $request->title;
-        $post->descr = $request->descr;
-
-
-        if($request->file('img')){
-            $path = \Storage::putFile('public', $request->file('img'));
-            $url = \Storage::url($path);
-            $post->img = $url;
-        }
-        $post->update();
-        $id = $post->post_id;
-        return redirect()->route('post.show', compact('id'))->with('success','Post was edited successful!');
+//        $post = Post::find($id);
+//        if(!$post){
+//            return redirect()->route('post.index')->withErrors('Nie poprawna strona!');
+//        }
+//        if($post->author_id != \Auth::user()->id && \Auth::user()->role != 'admin'){
+//            return redirect()->route('post.index')->withErrors('You don\'t have permission for it!');
+//        }
+//
+//        $post->title = $request->title;
+//        $post->short_title = \Str::length($request->title)>30 ? \Str::substr($request->title,0,30). '...' : $request->title;
+//        $post->descr = $request->descr;
+//
+//
+//        if($request->file('img')){
+//            $path = \Storage::putFile('public', $request->file('img'));
+//            $url = \Storage::url($path);
+//            $post->img = $url;
+//        }
+//        $post->update();
+//        $id = $post->post_id;
+//        return redirect()->route('post.show', compact('id'))->with('success','Post was edited successful!');
 
     }
 
 
-    public function destroy($id, ManagerRegistry $doctrine)
+    public function destroy($id, Request $request, ManagerRegistry $doctrine)
     {
+
         $post = $doctrine->getRepository(Post::class)->find($id);
         if(!$post){
             $this->addFlash('danger', 'Nie poprawna strona!');
-            return $this->redirectToRoute('post_index')->withErrors();
+            return $this->redirectToRoute('post_index');
+        }
+        $imageName = $post->getImg();
+
+        //remove file from catalogue
+        if($imageName!='default.jpg'){
+            $fs = new Filesystem();
+            $fs->remove('uploads/posts/'.$imageName);
         }
 
         $this->addFlash('success', 'Post był wycofany pomyslnie');
-        $post->delete();
+        $entityManager = $doctrine->getManager();
+        $entityManager->remove($post);
+        $entityManager->flush();
 
         return $this->redirectToRoute('post_index');
 

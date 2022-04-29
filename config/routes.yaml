@@ -28,15 +28,15 @@ post_edit:
     path: /post/edit/{id}
     controller: App\Controller\PostController::edit
 
-post_update:
-    path: /post/show/{id}
-    controller: App\Controller\PostController::store
-    methods: [PUT]
+#post_update:
+#    path: /post/show/{id}
+#    controller: App\Controller\PostController::store
+#    methods: [PUT]
 
 post_delete:
     path: /post/{id}
-    controller: App\Controller\PostController::store
-    methods: [DELETE]
+    controller: App\Controller\PostController::destroy
+
 
 #Home Controller
 home_index:
