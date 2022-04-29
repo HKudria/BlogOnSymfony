@@ -13,20 +13,20 @@ class PostController extends AbstractController
 {
     public function index(Request $request)
     {
-        if($request->search){
-            $posts =  Post::join('users','author_id', '=', 'users.id')
-                ->where('title','like','%'.$request->search.'%')
-                ->orWhere('descr','like','%'.$request->search.'%')
-                ->orderBY('posts.created_at','desc')
-                ->get();
-            return view('posts.index', compact('posts'));
-        }
-
-        $posts = Post::join('users','author_id', '=', 'users.id')
-            ->orderBY('posts.created_at','desc')
-            ->paginate(4);
-
-        return view('posts.index', compact('posts'));
+//        if($request->search){
+//            $posts =  Post::join('users','author_id', '=', 'users.id')
+//                ->where('title','like','%'.$request->search.'%')
+//                ->orWhere('descr','like','%'.$request->search.'%')
+//                ->orderBY('posts.created_at','desc')
+//                ->get();
+//            return view('posts.index', compact('posts'));
+//        }
+//
+//        $posts = Post::join('users','author_id', '=', 'users.id')
+//            ->orderBY('posts.created_at','desc')
+//            ->paginate(4);
+//
+        return $this->render('posts/index.html.twig');
     }
 
 

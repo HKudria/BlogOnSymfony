@@ -65,3 +65,8 @@ home_sendMessage:
 mail_sendMail:
     path: /sendMail/{id}
     controller: App\Controller\MailController::sendMail
+
+
+app_logout:
+    path: /logout
+    methods: GET

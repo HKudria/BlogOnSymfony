@@ -301,11 +301,26 @@
     "symfony/runtime": {
         "version": "v6.0.7"
     },
+    "symfony/security-bundle": {
+        "version": "6.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "5.3",
+            "ref": "98f1f2b0d635908c2b40f3675da2d23b1a069d30"
+        },
+        "files": [
+            "./config/packages/security.yaml"
+        ]
+    },
     "symfony/security-core": {
         "version": "v6.0.7"
     },
     "symfony/security-csrf": {
         "version": "v6.0.3"
+    },
+    "symfony/security-http": {
+        "version": "v6.0.8"
     },
     "symfony/service-contracts": {
         "version": "v3.0.0"
@@ -335,6 +350,18 @@
             "./templates/base.html.twig"
         ]
     },
+    "symfony/validator": {
+        "version": "6.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "5.3",
+            "ref": "c32cfd98f714894c4f128bb99aa2530c1227603c"
+        },
+        "files": [
+            "./config/packages/validator.yaml"
+        ]
+    },
     "symfony/var-dumper": {
         "version": "v6.0.6"
     },
@@ -356,6 +383,9 @@
     },
     "symfony/yaml": {
         "version": "v6.0.3"
+    },
+    "symfonycasts/verify-email-bundle": {
+        "version": "v1.10.0"
     },
     "twig/extra-bundle": {
         "version": "v3.3.8"

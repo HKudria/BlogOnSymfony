@@ -22,49 +22,22 @@
                 <li class="nav-item active">
                     <a class="nav-link active" aria-current="page" href="/">Glówna</a>
                 </li>
-                <li class="nav-item active offset-3">
+                <li class="nav-item active offset-2">
                     <a class="nav-link active" aria-current="page" href="{{ path('post_index') }}">Blog</a>
                 </li>
-{#                {% if user.isLoggedIn %}#}
-{#                {% if false %}#}
-{#                {% if(Auth::user()->role == 'admin') %}#}
-{#                <li class="nav-item active offset-3">#}
-{#                    <a class="nav-link active" aria-current="page" href="{{ path('post_create')}}">Create post</a>#}
-{#                </li>#}
-{#                {% endif %}#}
-{#                {% endif %}#}
-
+                {% if is_granted('ROLE_USER') %}
+                <li class="nav-item active offset-2">
+                    <a class="nav-link active" aria-current="page" href="{{ path('post_create')}}">Nowy post</a>
+                </li>
+                <li class="nav-item active offset-2">
+                    <a class="nav-link active" aria-current="page" href="{{ path('app_logout')}}">Wyłoguj się</a>
+                </li>
+                {% endif %}
             </ul>
             <form class="d-flex form-search" action="{{ path('post_index') }}">
                 <input class="form-control me-2" type="search" placeholder="Wyszukaj" aria-label="Search" name="search">
                 <button class="btn btn-outline-success" type="submit">Wyszukaj</button>
             </form>
-{#            {% if user.isLoggedIn %}#}
-{#            {% if false %}#}
-{#            #}{#                {{% if(Auth::user()->role == 'admin') %}}#}
-{#            <ul class="navbar-nav ms-auto ">#}
-{#                <!-- Authentication Links -->#}
-
-{#                <li class="nav-item dropdown">#}
-{#                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>#}
-{#                        {{ Auth::user()->name }}#}
-{#                    </a>#}
-
-{#                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">#}
-{#                        <a class="dropdown-item" href="{{ logout_path('')}}"#}
-{#                           onclick="event.preventDefault();#}
-{#                                                     document.getElementById('logout-form').submit();">#}
-{#                            {{ __('Logout') }}#}
-{#                        </a>#}
-
-{#                        <form id="logout-form" action="{{ logout_path('') }}" method="POST" class="d-none">#}
-{#                            @csrf#}
-{#                        </form>#}
-{#                    </div>#}
-{#                </li>#}
-{#            </ul>#}
-{#            {% endif %}#}
-{#            {% endif %}#}
         </div>
     </div>
 </nav>
