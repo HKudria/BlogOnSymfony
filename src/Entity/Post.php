@@ -14,9 +14,6 @@ class Post
     private $id;
 
     #[ORM\Column(type: 'integer')]
-    private $post_id;
-
-    #[ORM\Column(type: 'integer')]
     private $author_id;
 
     #[ORM\Column(type: 'string', length: 255)]

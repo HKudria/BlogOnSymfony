@@ -3,11 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+use App\Form\PostType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class PostController extends AbstractController
 {
@@ -30,42 +34,62 @@ class PostController extends AbstractController
     }
 
 
-    public function create()
+    public function create(Request $request, SluggerInterface $slugger, ManagerRegistry $doctrine)
     {
-        return $this->render('posts/create.html.twig');
-    }
+        $post = new Post();
 
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+//        $submittedToken = $request->request->get('create_form');
 
-    //for check field we need create request php artisan make:request PostRequest
-    public function store(Request $request, ManagerRegistry $doctrine)
-    {
-        $id = null;
-        $submittedToken = $request->request->get('token');
-        if ($this->isCsrfTokenValid('send-mail', $submittedToken)) {
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $this->getUser();
             $entityManager = $doctrine->getManager();
-            $post = new Post();
-            $post->setTitle($request->request->get('title'));
-            $post->setShortTitle($request->request->get('title')->lenght() > 30 ? $request->request->get('title')->slice(0, 30). '...' :  $request->request->get('title'));
-//            $post->author_id = \Auth::user()->id;
-            $post->setDescr($request->request->get('descr'));
-            if ($request->file('img')) {
-                $path = \Storage::putFile('public', $request->file('img'));
-                $url = \Storage::url($path);
-                $post->img = $url;
+            $post->setTitle($form->get('title')->getData());
+            $post->setShortTitle(mb_strlen($form->get('title')->getData()) > 30 ? substr($form->get('title')->getData(),0,30) . '...' :  $form->get('title')->getData());
+            $post->setAuthorId($user->getId());
+            $post->setDescr($form->get('descr')->getData());
+            /** @var UploadedFile $img */
+            $img = $form->get('img')->getData();
+            $post->setCreatedAt(new \DateTime('@'.strtotime('now')));
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($img) {
+                $originalFilename = pathinfo($img->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$img->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $img->move(
+                        $this->getParameter('post_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $post->setImg($newFilename);
             }
             $entityManager->persist($post);
             $entityManager->flush();
             $id = $post->getId();
-        }
 
-        if ($id){
-            $this->addFlash('success','Post zapisano z succesem!');
-        } else {
-            $this->addFlash('danger', 'Wystąpil bląd. Prosze sprobować póżniej');
+            if ($id){
+                $this->addFlash('success','Post zapisano z succesem!');
+            } else {
+                $this->addFlash('danger', 'Wystąpil bląd. Prosze sprobować póżniej');
+            }
+            return $this->redirectToRoute('post_index');
         }
-        return $this->redirectToRoute('post_index');
+        return $this->renderForm('posts/create.html.twig', [
+            'form' => $form,
+        ]);
+//        return $this->render('');
     }
-
 
     public function show($id)
     {

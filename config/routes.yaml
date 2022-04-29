@@ -28,11 +28,6 @@ post_edit:
     path: /post/edit/{id}
     controller: App\Controller\PostController::edit
 
-post_store:
-    path: /post
-    controller: App\Controller\PostController::store
-    methods: [POST]
-
 post_update:
     path: /post/show/{id}
     controller: App\Controller\PostController::store

@@ -27,7 +27,8 @@ security:
                     path: app_logout
 
     access_control:
-     - { path: '^/post/create', roles: [IS_AUTHENTICATED_FULLY, ROLE_USER] }
+     - { path: '^/post/create', roles: ROLE_USER }
+     - { path: '^/post/edit/*', roles: ROLE_USER }
       # - { path: ^/admin, roles: ROLE_ADMIN }
       # - { path: ^/profile, roles: ROLE_USER }
 
