@@ -43,10 +43,13 @@ class HomeController extends AbstractController
             $content->setTimestamps(new \DateTime("now"));
             $entityManager->persist($content);
             $entityManager->flush();
-
             $id = $content->getId();
-//          return redirect()->route('home.sendMail', ['id' => $id]);
-            return  $this->render('contact.html.twig',['testid' => $id]);
+            if ($id){
+                return $this->redirectToRoute('mail_sendMail', ['id' => $id]);
+            } else {
+                $this->addFlash('danger', 'Wystąpil bląd. Prosze sprobować póżniej');
+                return $this->redirectToRoute('home_index', ['max' => 10]);
+            }
         }
     }
 }

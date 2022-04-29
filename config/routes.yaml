@@ -63,5 +63,5 @@ home_sendMessage:
     methods: [POST]
 
 mail_sendMail:
-    path: /home/sendMail/{id}
+    path: /sendMail/{id}
     controller: App\Controller\MailController::sendMail
