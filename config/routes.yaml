@@ -34,7 +34,7 @@ post_edit:
 #    methods: [PUT]
 
 post_delete:
-    path: /post/{id}
+    path: /post/delete/{id}
     controller: App\Controller\PostController::destroy
 
 

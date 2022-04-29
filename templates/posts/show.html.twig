@@ -13,7 +13,7 @@
                         <a href="{{path('post_index')}}" class="btn btn-outline-primary">Main page</a>
                         {% if is_granted('ROLE_USER') %}
                                 <a href="{{path('post_edit',{'id' : post.id}) }}" class="btn btn-outline-success">Edit post</a>
-                                <a href="{{ path('post_delete', {'id':post.id ,csrf_token:'delete-item'}) }}" class="btn btn-outline-success" onclick="return confirm('are u sure?')">delete</a>
+                                <a href="{{ path('post_delete', {'id':post.id }) }}" class="btn btn-outline-success" onclick="return confirm('are u sure?')">delete</a>
                         {% endif %}
                     </div>
 
