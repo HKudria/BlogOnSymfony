@@ -1,20 +1,19 @@
-
 {% extends 'layouts/layout.html.twig' %}
 {% block title %}Kontakt ze mną{% endblock %}
 {% block content %}
 
 
-<h2>Na tej stronie możesz zadać mnie pytnie: </h2>
+    <h2>Na tej stronie możesz zadać mnie pytnie: </h2>
     <div class="blog">
 
-    <div class="col-6">
-        <div class="mapouter">
-            <div class="gmap_canvas"><iframe height="524" width="100%" id="gmap_canvas" src="https://maps.google.com/maps?q=pozna%C5%84&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://123movies-to.org"></a><br>
-                <style>.mapouter{position:relative;text-align:right;height:auto;width:100%;}</style>
-                <a href="https://www.embedgooglemap.net">free map for website</a><style>.gmap_canvas {overflow:hidden;background:none!important;height:auto;width:100%;}</style>
+        <div class="col-6">
+            <div class="mapouter">
+                <div class="gmap_canvas"><iframe height="524" width="100%" id="gmap_canvas" src="https://maps.google.com/maps?q=pozna%C5%84&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://123movies-to.org"></a><br>
+                    <style>.mapouter{position:relative;text-align:right;height:auto;width:100%;}</style>
+                    <a href="https://www.embedgooglemap.net">free map for website</a><style>.gmap_canvas {overflow:hidden;background:none!important;height:auto;width:100%;}</style>
+                </div>
             </div>
         </div>
-    </div>
         <div class="col-6">
             <div class="contact">
                 <p>Dziękuje za zinteresowania o kontakt ze mną.</p>
@@ -28,34 +27,32 @@
 
         </div>
     </div>
-<form class="form-floating" action="{{ path('home_sendMessage') }}"  method="post">
-    <input type="hidden" name="token" value="{{ csrf_token('send-mail') }}"/>
-    <div class="mb-3">
-        <label for="name" class="form-label">Imię*</label>
-        <input type="text" class="form-control" id="name" name="name" required>
-    </div>
+    <form class="form-floating" action="{{ path('home_sendMessage') }}"  method="post">
+        <input type="hidden" name="token" value="{{ csrf_token('send-mail') }}"/>
+        <div class="mb-3">
+            <label for="name" class="form-label">Imię*</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
 
-    <div class="mb-3">
-        <label for="phone" class="form-label">Telefon</label>
-        <input type="text" class="form-control" name="phone" id="phone">
-    </div>
-    <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">Email adres*</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" name="email" required>
-    </div>
-    <div class="mb-3">
-        <label for="exampleFormControlTextarea1" class="form-label">Wiadomość*</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" name="text" rows="5"></textarea>
-    </div>
-    <div class="mb-3 form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
-        <label class="form-check-label" for="exampleCheck1">Zatwierdż mnie*</label>
-    </div>
-    <input type="text" value="" name="ip" hidden>
-    <button type="submit" class="btn btn-primary">Wyslij</button>
-</form>
+        <div class="mb-3">
+            <label for="phone" class="form-label">Telefon</label>
+            <input type="text" class="form-control" name="phone" id="phone">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email adres*</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Wiadomość*</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" name="text" rows="5"></textarea>
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
+            <label class="form-check-label" for="exampleCheck1">Zatwierdż mnie*</label>
+        </div>
+        <input type="text" value="" name="ip" hidden>
+        <button type="submit" class="btn btn-primary">Wyslij</button>
+    </form>
 
-<p><em>*Pola oznaczone gwiazdką muszą być wypelnione</em></p>
+    <p><em>*Pola oznaczone gwiazdką muszą być wypelnione</em></p>
 {% endblock %}
-
-
