@@ -115,6 +115,7 @@ nav{
     .rounded-circle-heading{
         margin-left: 40%;
     }
+
 }
 
 @media (max-width: 767px) {
@@ -131,6 +132,13 @@ nav{
         margin-left: 37%;
     }
 
+    .blog{
+        display: block;
+    }
+
+    .blog .col-6{
+       width: 100%;
+    }
 }
 
 @media (max-width: 520px) {
@@ -141,6 +149,7 @@ nav{
     .rounded-circle-heading{
         margin-left: 33%;
     }
+
 }
 
 
@@ -149,6 +158,7 @@ nav{
     .rounded-circle-heading{
         margin-left: 30%;
     }
+
 }
 
 
