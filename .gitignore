@@ -9,4 +9,4 @@
 /vendor/
 /.env
 ###< symfony/framework-bundle ###
-/public/uploads
+/public/uploads/
