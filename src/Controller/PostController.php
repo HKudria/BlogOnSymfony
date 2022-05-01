@@ -104,6 +104,7 @@ class PostController extends AbstractController
             $post->setDescr($form->get('descr')->getData());
             /** @var UploadedFile $img */
             $img = $form->get('img')->getData();
+
             $post->setCreatedAt(new \DateTime('@'.strtotime('now')));
             // this condition is needed because the 'brochure' field is not required
             // so the PDF file must be processed only when a file is uploaded
@@ -127,7 +128,10 @@ class PostController extends AbstractController
                 // instead of its contents
                 $post->setImg($newFilename);
             } else {
-                $post->setImg('default.jpg');
+                //for update post, if I have image on BD and I don't have it in form. Save the same image
+                if (!$post->getImg()){
+                    $post->setImg('default.jpg');
+                }
             }
             $entityManager->persist($post);
             $entityManager->flush();
