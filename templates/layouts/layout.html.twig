@@ -26,10 +26,10 @@
                     <a class="nav-link active" aria-current="page" href="{{ path('post_index') }}">Blog</a>
                 </li>
                 {% if is_granted('ROLE_USER') %}
-                <li class="nav-item active offset-2">
+                <li class="nav-item active offset-2 admin">
                     <a class="nav-link active" aria-current="page" href="{{ path('post_create')}}">Nowy post</a>
                 </li>
-                <li class="nav-item active offset-2">
+                <li class="nav-item active offset-2 admin">
                     <a class="nav-link active" aria-current="page" href="{{ path('app_logout')}}">Wyłoguj się</a>
                 </li>
                 {% endif %}

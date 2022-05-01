@@ -3,7 +3,12 @@ body{
 }
 
 .blog{
-    display: block ruby;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.blog .col-6{
+    padding-right: 3px;
 }
 
 nav{
@@ -63,8 +68,7 @@ nav{
     padding-top: 20px;
 }
 .rounded-circle-heading {
-    margin: auto;
-    margin-left: 33.33333%;
+    margin: auto auto auto 33.33333%;
 }
 
 .main-p, .main-h2{
@@ -106,10 +110,25 @@ nav{
 
 }
 
+@media (max-width: 991px){
+
+    .rounded-circle-heading{
+        margin-left: 40%;
+    }
+}
+
 @media (max-width: 767px) {
     .card-header {
         min-height: 87px;
         text-align: center;
+    }
+
+    .admin{
+        display: none;
+    }
+
+    .rounded-circle-heading{
+        margin-left: 37%;
     }
 
 }
@@ -119,7 +138,19 @@ nav{
        width: inherit !important;
       height: auto;
    }
+    .rounded-circle-heading{
+        margin-left: 33%;
+    }
 }
+
+
+@media (max-width: 400px) {
+
+    .rounded-circle-heading{
+        margin-left: 30%;
+    }
+}
+
 
 
 
