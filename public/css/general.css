@@ -9,6 +9,41 @@ body{
 .contact p{
     font-size: 20px;
 }
+.pagination{
+    display: flex;
+    flex-flow: row;
+    height: 38px;
+}
+
+.pagination .previous, .first, .current, .last, .next, .page{
+    height: 37px;
+    width: 30px;
+    position: relative;
+    box-sizing: border-box;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    color: #0d6efd;
+    display: block;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+
+    border-bottom-left-radius: .25rem;
+    border-top-left-radius: .25rem;
+}
+
+.pagination .current{
+    text-decoration: underline;
+    text-align: center;
+    padding-top: 4px;
+
+}
+
+.pagination a{
+    text-decoration: none;
+    position: absolute;
+    top: 15%;
+    text-align: center;
+    padding-left: 7px;
+}
 
 .blog{
     display: flex;

@@ -14,6 +14,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Security\Core\Security;
+use Knp\Component\Pager\PaginatorInterface;
+
+;
 
 class PostController extends AbstractController
 {
@@ -24,12 +27,12 @@ class PostController extends AbstractController
          $this->security = $security;
      }
 
-    public function index(Request $request,ManagerRegistry $doctrine)
+    public function index(Request $request,ManagerRegistry $doctrine,PaginatorInterface $paginator)
     {
         //search
         if($request->query->get('search')){
             $word = htmlspecialchars($request->query->get('search'));
-            $post = $doctrine->getRepository(Post::class)->createQueryBuilder('o')
+            $posts = $doctrine->getRepository(Post::class)->createQueryBuilder('o')
                 ->where('o.title LIKE :word')
                 ->orWhere('o.descr LIKE :word')
                 ->orderBY('o.created_at','desc')
@@ -46,7 +49,13 @@ class PostController extends AbstractController
 //            ->paginate(4);
 //
 
-        return $this->render('posts/index.html.twig', ['posts' => $posts]);
+
+
+        return $this->render('posts/index.html.twig', [
+            'pagination' => $paginator->paginate(
+             $posts,$request->query->getInt('page', 1),2)
+        ]);
+//        return $this->render('posts/index.html.twig', ['posts' => $posts]);
     }
 
 
@@ -58,7 +67,7 @@ class PostController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->saveToDB($post,$form, $request, $doctrine, $slugger);
+            $this->saveToDB($post,$form, $doctrine, $slugger);
             return $this->redirectToRoute('post_index');
         }
 
