@@ -20,8 +20,11 @@ class PostType extends AbstractType
                 'label' => ' ',
                 'attr' => [
                     'placeholder' => 'Title',
-                    'class' => 'form-control'
+                    'class' => 'form-control',
+                    'minlength' => 6,
+                    'maxlength' => 300
                 ],
+                'required' => true,
                 ])
 
             ->add('descr', TextareaType::class, [
@@ -29,8 +32,10 @@ class PostType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Tekst',
                     'rows' => '10',
-                    'class' => 'form-control'
+                    'class' => 'form-control',
+                    'minlength' => 6,
                 ],
+                'required' => true,
             ])
 
             ->add('img', FileType::class, [

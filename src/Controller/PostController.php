@@ -24,23 +24,29 @@ class PostController extends AbstractController
          $this->security = $security;
      }
 
-    public function index(ManagerRegistry $doctrine)
+    public function index(Request $request,ManagerRegistry $doctrine)
     {
-//        if($request->search){
-//            $posts =  Post::join('users','author_id', '=', 'users.id')
-//                ->where('title','like','%'.$request->search.'%')
-//                ->orWhere('descr','like','%'.$request->search.'%')
-//                ->orderBY('posts.created_at','desc')
-//                ->get();
-//            return view('posts.index', compact('posts'));
-//        }
-//
+        //search
+        if($request->query->get('search')){
+            $word = htmlspecialchars($request->query->get('search'));
+            $post = $doctrine->getRepository(Post::class)->createQueryBuilder('o')
+                ->where('o.title LIKE :word')
+                ->orWhere('o.descr LIKE :word')
+                ->orderBY('o.created_at','desc')
+                ->setParameter('word', '%'.$word.'%')
+                ->getQuery()
+                ->getResult();
+        } else {
+            $posts = $doctrine->getRepository(Post::class)->findAll();
+        }
+
+        //Paginate
 //        $posts = Post::join('users','author_id', '=', 'users.id')
 //            ->orderBY('posts.created_at','desc')
 //            ->paginate(4);
 //
 
-        return $this->render('posts/index.html.twig', ['posts' => $doctrine->getRepository(Post::class)->findAll()]);
+        return $this->render('posts/index.html.twig', ['posts' => $posts]);
     }
 
 
@@ -81,7 +87,7 @@ class PostController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->saveToDB($post,$form, $request, $doctrine, $slugger);
+                $this->saveToDB($post,$form, $doctrine, $slugger);
                 return $this->redirectToRoute('post_index');
             }
 
@@ -93,7 +99,7 @@ class PostController extends AbstractController
     }
 
 
-    public function saveToDB($post,$form,Request $request, ManagerRegistry $doctrine, SluggerInterface $slugger)
+    public function saveToDB($post,$form, ManagerRegistry $doctrine, SluggerInterface $slugger)
     {
 
             $user = $this->getUser();
@@ -146,7 +152,7 @@ class PostController extends AbstractController
     }
 
 
-    public function destroy($id, Request $request, ManagerRegistry $doctrine)
+    public function destroy(int $id, ManagerRegistry $doctrine)
     {
 
         $post = $doctrine->getRepository(Post::class)->find($id);
