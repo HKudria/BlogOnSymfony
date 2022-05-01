@@ -2,6 +2,14 @@ body{
     background: #fff;
 }
 
+.contact{
+    padding-left: 20px;
+}
+
+.contact p{
+    font-size: 20px;
+}
+
 .blog{
     display: flex;
     flex-flow: row wrap;
