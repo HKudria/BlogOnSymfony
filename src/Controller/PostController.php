@@ -43,19 +43,10 @@ class PostController extends AbstractController
             $posts = $doctrine->getRepository(Post::class)->findAll();
         }
 
-        //Paginate
-//        $posts = Post::join('users','author_id', '=', 'users.id')
-//            ->orderBY('posts.created_at','desc')
-//            ->paginate(4);
-//
-
-
-
         return $this->render('posts/index.html.twig', [
             'pagination' => $paginator->paginate(
-             $posts,$request->query->getInt('page', 1),2)
+                $posts,$request->query->getInt('page', 1),4)
         ]);
-//        return $this->render('posts/index.html.twig', ['posts' => $posts]);
     }
 
 
