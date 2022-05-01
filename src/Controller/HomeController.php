@@ -21,6 +21,11 @@ class HomeController extends AbstractController
         return $this->render('price.html.twig');
     }
 
+    public function about() : Response
+    {
+        return $this->render('about.html.twig');
+    }
+
     public function contact() : Response
     {
         return $this->render('contact.html.twig');

@@ -169,6 +169,7 @@ class PostController extends AbstractController
 
     }
 
+    //check if I have permission and post is exist.
     public function checkSecurity($post){
 
         if(!$post){
@@ -179,7 +180,6 @@ class PostController extends AbstractController
             $this->addFlash('danger', 'You don\'t have permission for it!');
             return false;
         }
-
         return true;
     }
 }

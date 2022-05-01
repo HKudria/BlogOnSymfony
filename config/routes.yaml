@@ -6,9 +6,6 @@ kernel:
     resource: ../src/Kernel.php
     type: annotation
 
-my_first_controller:
-    path: /my_first
-    controller: App\Controller\FirstController::index
 
 
 #Post Controller
@@ -28,11 +25,6 @@ post_edit:
     path: /post/edit/{id}
     controller: App\Controller\PostController::edit
 
-#post_update:
-#    path: /post/show/{id}
-#    controller: App\Controller\PostController::store
-#    methods: [PUT]
-
 post_delete:
     path: /post/delete/{id}
     controller: App\Controller\PostController::destroy
@@ -47,6 +39,10 @@ home_price:
     path: /home/price
     controller: App\Controller\HomeController::price
 
+home_about:
+    path: /home/about
+    controller: App\Controller\HomeController::about
+
 home_contact:
     path: /home/contact
     controller: App\Controller\HomeController::contact
@@ -57,11 +53,12 @@ home_sendMessage:
     controller: App\Controller\HomeController::sendMessage
     methods: [POST]
 
+#MailController
 mail_sendMail:
     path: /sendMail/{id}
     controller: App\Controller\MailController::sendMail
 
-
+#LoginController
 app_logout:
     path: /logout
     methods: GET
