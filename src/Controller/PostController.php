@@ -13,9 +13,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Security\Core\Security;
 
 class PostController extends AbstractController
 {
+    private $security;
+
+    public function __construct(Security $security)
+     {
+         $this->security = $security;
+     }
+
     public function index(ManagerRegistry $doctrine)
     {
 //        if($request->search){
@@ -44,6 +52,50 @@ class PostController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->saveToDB($post,$form, $request, $doctrine, $slugger);
+            return $this->redirectToRoute('post_index');
+        }
+
+        return $this->renderForm('posts/create.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
+    public function show(int $id, ManagerRegistry $doctrine)
+    {
+        $post = $doctrine->getRepository(Post::class)->find($id);
+        if(!$post){
+            $this->addFlash('danger', 'Nie poprawna strona!');
+            return $this->redirectToRoute('post_index');
+        }
+        return $this->render('posts/show.html.twig',['post'=>$post]);
+    }
+
+
+    public function edit(int $id, Request $request, ManagerRegistry $doctrine,  SluggerInterface $slugger)
+    {
+        $post = $doctrine->getRepository(Post::class)->find($id);
+
+        if($this->checkSecurity($post)){
+            $form = $this->createForm(PostType::class, $post);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->saveToDB($post,$form, $request, $doctrine, $slugger);
+                return $this->redirectToRoute('post_index');
+            }
+
+            return $this->renderForm('posts/edit.html.twig', [
+                'form' => $form,
+            ]);
+        }
+        return $this->redirectToRoute('home_index');
+    }
+
+
+    public function saveToDB($post,$form,Request $request, ManagerRegistry $doctrine, SluggerInterface $slugger)
+    {
+
             $user = $this->getUser();
             $entityManager = $doctrine->getManager();
             $post->setTitle($form->get('title')->getData());
@@ -86,62 +138,7 @@ class PostController extends AbstractController
             } else {
                 $this->addFlash('danger', 'Wystąpil bląd. Prosze sprobować póżniej');
             }
-            return $this->redirectToRoute('post_index');
-        }
-        return $this->renderForm('posts/create.html.twig', [
-            'form' => $form,
-        ]);
-//        return $this->render('');
-    }
-
-    public function show(int $id, ManagerRegistry $doctrine)
-    {
-        $post = $doctrine->getRepository(Post::class)->find($id);
-        if(!$post){
-            $this->addFlash('danger', 'Nie poprawna strona!');
-            return $this->redirectToRoute('post_index');
-        }
-        return $this->render('posts/show.html.twig',['post'=>$post]);
-    }
-
-
-    public function edit($id)
-    {
-//        $post = Post::find($id);
-//        if(!$post){
-//            return redirect()->route('post.index')->withErrors('Nie poprawna strona!');
-//        }
-//        if($post->author_id != \Auth::user()->id  && \Auth::user()->role != 'admin'){
-//            return redirect()->route('post.index')->withErrors('You don\'t have permission for it!');
-//        }
-//        return view('posts.edit',compact('post'));
-    }
-
-
-    public function update(Request $request, $id)
-    {
-//        $post = Post::find($id);
-//        if(!$post){
-//            return redirect()->route('post.index')->withErrors('Nie poprawna strona!');
-//        }
-//        if($post->author_id != \Auth::user()->id && \Auth::user()->role != 'admin'){
-//            return redirect()->route('post.index')->withErrors('You don\'t have permission for it!');
-//        }
-//
-//        $post->title = $request->title;
-//        $post->short_title = \Str::length($request->title)>30 ? \Str::substr($request->title,0,30). '...' : $request->title;
-//        $post->descr = $request->descr;
-//
-//
-//        if($request->file('img')){
-//            $path = \Storage::putFile('public', $request->file('img'));
-//            $url = \Storage::url($path);
-//            $post->img = $url;
-//        }
-//        $post->update();
-//        $id = $post->post_id;
-//        return redirect()->route('post.show', compact('id'))->with('success','Post was edited successful!');
-
+            return true;
     }
 
 
@@ -149,24 +146,36 @@ class PostController extends AbstractController
     {
 
         $post = $doctrine->getRepository(Post::class)->find($id);
-        if(!$post){
-            $this->addFlash('danger', 'Nie poprawna strona!');
-            return $this->redirectToRoute('post_index');
-        }
-        $imageName = $post->getImg();
+        if($this->checkSecurity($post)){
+            $imageName = $post->getImg();
 
-        //remove file from catalogue
-        if($imageName!='default.jpg'){
-            $fs = new Filesystem();
-            $fs->remove('uploads/posts/'.$imageName);
-        }
+            //remove file from catalogue
+            if($imageName!='default.jpg'){
+                $fs = new Filesystem();
+                $fs->remove('uploads/posts/'.$imageName);
+            }
 
-        $this->addFlash('success', 'Post był wycofany pomyslnie');
-        $entityManager = $doctrine->getManager();
-        $entityManager->remove($post);
-        $entityManager->flush();
+            $this->addFlash('success', 'Post był wycofany pomyslnie');
+            $entityManager = $doctrine->getManager();
+            $entityManager->remove($post);
+            $entityManager->flush();
+        }
 
         return $this->redirectToRoute('post_index');
 
+    }
+
+    public function checkSecurity($post){
+
+        if(!$post){
+            $this->addFlash('danger', 'Nie poprawna strona!');
+            return false;
+        }
+        if(!$this->security->isGranted('ROLE_USER')){
+            $this->addFlash('danger', 'You don\'t have permission for it!');
+            return false;
+        }
+
+        return true;
     }
 }
