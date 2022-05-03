@@ -46,12 +46,12 @@ home_about:
 home_contact:
     path: /home/contact
     controller: App\Controller\HomeController::contact
-    methods: [GET|HEAD]
+#    methods: [GET|HEAD]
 
-home_sendMessage:
-    path: /home/contact
-    controller: App\Controller\HomeController::sendMessage
-    methods: [POST]
+#home_sendMessage:
+#    path: /home/contact
+#    controller: App\Controller\HomeController::sendMessage
+#    methods: [POST]
 
 #MailController
 mail_sendMail:
