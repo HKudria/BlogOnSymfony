@@ -9,7 +9,9 @@ body{
 .contact p{
     font-size: 20px;
 }
-
+.space{
+    padding-right: 5px;
+}
 .blog{
     display: flex;
     flex-flow: row wrap;

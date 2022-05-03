@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\All;
 
 class ContactType extends AbstractType
 {
@@ -29,14 +30,14 @@ class ContactType extends AbstractType
                 'required' => true,
             ])
             ->add('phone', NumberType::class, [
+                'invalid_message' => 'Prosze podać prawidlowy numer telefonu',
                 'label' => 'Telefon',
                 'attr' => [
-                    'placeholder' => 'Podaj numer telefonu',
+                    'placeholder' => 'Prosze podać numer telefonu formacie 555444555',
                     'class' => 'form-control',
                     'minlength' => 9,
                     'maxlength' => 11
                 ],
-                'help' =>'Prosze podać numer telefonu formacie 555444555',
                 'required' => false,
             ])
             ->add('email', EmailType::class, [
@@ -67,7 +68,7 @@ class ContactType extends AbstractType
             ->add('check', CheckboxType::class, [
                 'label'    => 'Zatwierdż mnie',
                 'label_attr' => [
-                    'class' => 'form-check-label',
+                    'class' => 'form-check-label space',
                 ],
                 'required' => true,
                 'attr' => [

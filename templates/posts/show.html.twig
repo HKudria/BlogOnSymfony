@@ -10,7 +10,8 @@
                         <div class="card-img card-img-max" style="background-image: url({{ asset('uploads/posts/' ~ post.img)}})"></div>
                         <div class="card-author">Post napisano dnia: {{post.createdAt|date("m/d/Y")}}</div>
                         <p class="card-text c">{{post.descr}}</p>
-                        <a href="{{path('post_index')}}" class="btn btn-outline-primary">Strona domowa</a>
+                        <a href="{{path('home_index')}}" class="btn btn-outline-success">Strona domowa</a>
+                        <a href="{{path('post_index')}}" class="btn btn-outline-primary">Powrót do blogu</a>
                         {% if is_granted('ROLE_USER') %}
                                 <a href="{{path('post_edit',{'id' : post.id}) }}" class="btn btn-outline-success">Edycja postu</a>
                                 <a href="{{ path('post_delete', {'id':post.id }) }}" class="btn btn-outline-danger" onclick="return confirm('are u sure?')">Usuń post</a>
