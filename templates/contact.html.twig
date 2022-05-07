@@ -1,10 +1,10 @@
 
 {% extends 'layouts/layout.html.twig' %}
-{% block title %}Kontakt ze mną{% endblock %}
+{% block title %}{{ 'contactForm.title'|trans }}{% endblock %}
 {% block content %}
 
 
-<h2>Na tej stronie możesz zadać mnie pytnie: </h2>
+<h2>{{'contactForm.h2message'|trans}} </h2>
     <div class="blog">
     <div class="col-6">
         <div class="mapouter">
@@ -16,12 +16,12 @@
     </div>
         <div class="col-6">
             <div class="contact">
-                <p>Dziękuje za zinteresowania o kontakt ze mną.</p>
-                <h1>Danne do kontatku:</h1>
+                <p>{{'contactForm.mainMessage'|trans}}</p>
+                <h1>{{'contactForm.data'|trans}}</h1>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Telefon: <a href="tel:+48000000000">777-777-777</a></li>
-                    <li class="list-group-item">eMail: <a href="mailto:hermanwebmasterpl@gmail.com">hermanwebmasterpl@gmail.com</a></li>
-                    <li class="list-group-item">Adres: os. Osiedlowe 20 Poznań 60-000</li>
+                    <li class="list-group-item">{{'contactForm.phone'|trans}}: <a href="tel:+48000000000">777-777-777</a></li>
+                    <li class="list-group-item">{{'contactForm.email'|trans}}: <a href="mailto:hermanwebmasterpl@gmail.com">hermanwebmasterpl@gmail.com</a></li>
+                    <li class="list-group-item">{{'contactForm.addres'|trans}}: os. Osiedlowe 20 Poznań 60-000</li>
                     <li class="list-group-item"><a href="https://www.facebook.com/profile.php?id=100069855155823"><img class="bd-placeholder-img" src="{{asset('/img/facebook.png')}}" width="24" height="24"></img></a></li>
                 </ul>
             </div>
@@ -57,10 +57,9 @@
     <div class="form-group">
         {{ form_row(form.check) }}
     </div>
-
-    <input type="submit" value="Wyslij wiadomość" class="btn btn-outline-primary">
-
-<p><em>*Pola oznaczone gwiazdką muszą być wypelnione</em></p>
+    <input type="submit" value="{{ 'contactForm.sendButton'|trans }}" class="btn btn-outline-primary">
+    {{ form_end(form) }}
+<p><em>{{ 'contactForm.notice'|trans }}</em></p>
 {% endblock %}
 
 

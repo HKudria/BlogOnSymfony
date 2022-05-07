@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -20,9 +21,9 @@ class ContactType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Imię*',
+                'label' => 'contactForm.name',
                 'attr' => [
-                    'placeholder' => 'Podaj imię',
+                    'placeholder' => 'contactForm.namePlaceholder',
                     'class' => 'form-control',
                     'minlength' => 2,
                     'maxlength' => 50
@@ -30,10 +31,10 @@ class ContactType extends AbstractType
                 'required' => true,
             ])
             ->add('phone', NumberType::class, [
-                'invalid_message' => 'Prosze podać prawidlowy numer telefonu',
-                'label' => 'Telefon',
+                'invalid_message' => 'contactForm.phoneError',
+                'label' => 'contactForm.phone',
                 'attr' => [
-                    'placeholder' => 'Prosze podać numer telefonu formacie 555444555',
+                    'placeholder' => 'contactForm.phonePlaceholder',
                     'class' => 'form-control',
                     'minlength' => 9,
                     'maxlength' => 11
@@ -41,24 +42,24 @@ class ContactType extends AbstractType
                 'required' => false,
             ])
             ->add('email', EmailType::class, [
-                'label' => 'Email adres*',
+                'label' => 'contactForm.email',
                 'attr' => [
-                    'placeholder' => 'Podaj adres email',
+                    'placeholder' => 'contactForm.emailPlaceholder',
                     'class' => 'form-control',
                 ],
                 'constraints' => [
-                    new NotBlank(["message" => "Prosze podać prawidlowy mail"]),
-                    new Email(["message" => "Twoj mail nie wygliąda na prawidlowy"]),
+                    new NotBlank(['message' => 'contactForm.emailMistake']),
+                    new Email(['message' => 'contactForm.emailError']),
                 ],
                 'required' => true,
             ])
             ->add('message', TextareaType::class, [
-                'label' => 'Wiadomość*',
+                'label' => 'contactForm.message',
                 'label_attr' => [
                     'class' => 'form-check-label',
                 ],
                 'attr' => [
-                    'placeholder' => 'Tekst',
+                    'placeholder' => 'contactForm.messagePlaceholder',
                     'rows' => '10',
                     'class' => 'form-control',
                     'minlength' => 6,
@@ -66,7 +67,7 @@ class ContactType extends AbstractType
             'required' => true,
             ])
             ->add('check', CheckboxType::class, [
-                'label'    => 'Zatwierdż mnie',
+                'label'    => 'contactForm.checkBox',
                 'label_attr' => [
                     'class' => 'form-check-label space',
                 ],
@@ -81,7 +82,9 @@ class ContactType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'csrf_protection' => false,
+            'csrf_protection' => true,
+            'csrf_field_name' => '_token',
+            'csrf_token_id'   => 'contact_item',
         ]);
     }
 }

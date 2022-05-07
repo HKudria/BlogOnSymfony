@@ -40,7 +40,7 @@ class HomeController extends AbstractController
             if ($id){
                 return $this->redirectToRoute('mail_sendMail', ['id' => $id]);
             } else {
-                $this->addFlash('danger', 'Wystąpil bląd. Prosze sprobować póżniej');
+                $this->addFlash('danger', 'error.mistake');
                 return $this->redirectToRoute('home_index', ['max' => 10]);
             }
         }
