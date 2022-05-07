@@ -15,16 +15,20 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Security\Core\Security;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 ;
 
 class PostController extends AbstractController
 {
     private $security;
+    private $translator;
 
-    public function __construct(Security $security)
+    public function __construct(Security $security, TranslatorInterface $translator)
      {
          $this->security = $security;
+         $this->translator = $translator;
+
      }
 
     public function index(Request $request,ManagerRegistry $doctrine,PaginatorInterface $paginator)
@@ -71,7 +75,7 @@ class PostController extends AbstractController
     {
         $post = $doctrine->getRepository(Post::class)->find($id);
         if(!$post){
-            $this->addFlash('danger', 'Nie poprawna strona!');
+            $this->addFlash('danger', $this->translator->trans('error.badPage'));
             return $this->redirectToRoute('post_index');
         }
         return $this->render('posts/show.html.twig',['post'=>$post]);
@@ -144,31 +148,35 @@ class PostController extends AbstractController
             $id = $post->getId();
 
             if ($id){
-                $this->addFlash('success','Post zapisano z succesem!');
+                $this->addFlash('success',$this->translator->trans('error.saveSuccess'));
             } else {
-                $this->addFlash('danger', 'Wystąpil bląd. Prosze sprobować póżniej');
+                $this->addFlash('danger', $this->translator->trans('error.mistake'));
             }
             return true;
     }
 
 
-    public function destroy(int $id, ManagerRegistry $doctrine)
+    public function destroy(int $id,Request $request, ManagerRegistry $doctrine)
     {
+        $submittedToken = $request->request->get('token');
+        if ($this->isCsrfTokenValid('delete-item', $submittedToken)) {
+            $post = $doctrine->getRepository(Post::class)->find($id);
+            if($this->checkSecurity($post)){
+                $imageName = $post->getImg();
 
-        $post = $doctrine->getRepository(Post::class)->find($id);
-        if($this->checkSecurity($post)){
-            $imageName = $post->getImg();
+                //remove file from catalogue
+                if($imageName!='default.jpg'){
+                    $fs = new Filesystem();
+                    $fs->remove('uploads/posts/'.$imageName);
+                }
 
-            //remove file from catalogue
-            if($imageName!='default.jpg'){
-                $fs = new Filesystem();
-                $fs->remove('uploads/posts/'.$imageName);
+                $this->addFlash('success', $this->translator->trans('error.deleteSuccess'));
+                $entityManager = $doctrine->getManager();
+                $entityManager->remove($post);
+                $entityManager->flush();
             }
-
-            $this->addFlash('success', 'Post był wycofany pomyslnie');
-            $entityManager = $doctrine->getManager();
-            $entityManager->remove($post);
-            $entityManager->flush();
+        } else {
+            $this->addFlash('danger', $this->translator->trans('error.invalidToken'));
         }
 
         return $this->redirectToRoute('post_index');
@@ -179,11 +187,11 @@ class PostController extends AbstractController
     public function checkSecurity($post){
 
         if(!$post){
-            $this->addFlash('danger', 'Nie poprawna strona!');
+            $this->addFlash('danger', $this->translator->trans('error.badPage'));
             return false;
         }
         if(!$this->security->isGranted('ROLE_USER')){
-            $this->addFlash('danger', 'You don\'t have permission for it!');
+            $this->addFlash('danger', $this->translator->trans('error.permission'));
             return false;
         }
         return true;

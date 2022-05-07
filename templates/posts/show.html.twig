@@ -8,13 +8,17 @@
                     <div class="card-header"><h2>{{post.title}}</h2></div>
                     <div class="card-body">
                         <div class="card-img card-img-max" style="background-image: url({{ asset('uploads/posts/' ~ post.img)}})"></div>
-                        <div class="card-author">Post napisano dnia: {{post.createdAt|date("m/d/Y")}}</div>
+                        <div class="card-author">{{ 'post.date'|trans }} {{post.createdAt|date("m/d/Y")}}</div>
                         <p class="card-text c">{{post.descr}}</p>
-                        <a href="{{path('home_index')}}" class="btn btn-outline-success">Strona domowa</a>
-                        <a href="{{path('post_index')}}" class="btn btn-outline-primary">Powrót do blogu</a>
+                        <a href="{{path('home_index')}}" class="btn btn-outline-success">{{ 'homeButton'|trans }}</a>
+                        <a href="{{path('post_index')}}" class="btn btn-outline-primary">{{ 'blogButton'|trans }}</a>
                         {% if is_granted('ROLE_USER') %}
-                                <a href="{{path('post_edit',{'id' : post.id}) }}" class="btn btn-outline-success">Edycja postu</a>
-                                <a href="{{ path('post_delete', {'id':post.id }) }}" class="btn btn-outline-danger" onclick="return confirm('are u sure?')">Usuń post</a>
+                                <a href="{{path('post_edit',{'id' : post.id}) }}" class="btn btn-outline-success">{{ 'post.editButton'|trans }}</a>
+                            <form action="{{ path('post_delete', {'id':post.id }) }}" class="d-inline" method="post">
+                                <input type="hidden" name="token" value="{{ csrf_token('delete-item') }}"/>
+                                <button type="submit" class="btn btn-outline-danger" onclick="return confirm('are u sure?')">{{ 'post.deleteButton'|trans }}</button>
+                            </form>
+
                         {% endif %}
                     </div>
 

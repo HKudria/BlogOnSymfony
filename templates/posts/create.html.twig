@@ -1,10 +1,10 @@
 
 {% extends 'layouts/layout.html.twig' %}
-{% block title %}Nowy post{% endblock %}
+{% block title %}{{ 'post.newTitle'|trans }}{% endblock %}
 {% block content %}
 
 
-    <h3>Create post</h3>
+    <h3>{{ 'post.newTitle'|trans }}</h3>
 
     {{ form_start(form) }}
     <div class="form-group">
@@ -17,6 +17,6 @@
         {{ form_row(form.img) }}
     </div>
 
-    <input type="submit" value="Create post" class="btn btn-outline-primary">
-
+    <input type="submit" value="{{ 'post.createButton'|trans }}" class="btn btn-outline-primary">
+    {{ form_end(form) }}
 {% endblock %}

@@ -10,16 +10,25 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PostType extends AbstractType
 {
+
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+
+    }
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('title', TextType::class, [
                 'label' => ' ',
                 'attr' => [
-                    'placeholder' => 'Title',
+                    'placeholder' => 'post.createTitle',
                     'class' => 'form-control',
                     'minlength' => 6,
                     'maxlength' => 300
@@ -30,7 +39,7 @@ class PostType extends AbstractType
             ->add('descr', TextareaType::class, [
                 'label' => ' ',
                 'attr' => [
-                    'placeholder' => 'Tekst',
+                    'placeholder' => 'post.postText',
                     'rows' => '10',
                     'class' => 'form-control',
                     'minlength' => 6,
@@ -59,7 +68,7 @@ class PostType extends AbstractType
                             'image/jpeg',
                             'image/png',
                         ],
-                        'mimeTypesMessage' => 'Prosze zaladować prawidlowy obrazek',
+                        'mimeTypesMessage' => $this->translator->trans('error.imgError'),
                     ])
                 ],
             ])// ...
@@ -70,7 +79,9 @@ class PostType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Post::class,
-            'csrf_protection' => false,
+            'csrf_protection' => true,
+            'csrf_field_name' => '_token',
+            'csrf_token_id'   => 'post_item',
         ]);
     }
 }

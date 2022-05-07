@@ -1,17 +1,17 @@
 
 {% extends 'layouts/layout.html.twig' %}
-{% block title %}Blog - Nadiia Yahnych{% endblock %}
+{% block title %}{{ 'post.title'|trans }}{% endblock %}
 {% block content %}
 
 
 
     {% if app.request.query.get("search") %}
         {% if pagination|length > 0 %}
-            <h2>Resultat dla "{{app.request.query.get("search")|striptags}}"</h2>
-            <p class="lead">Znależioni "{{pagination|length}}" posta</p>
+            <h2>{{ 'post.searchResult'|trans }}"{{app.request.query.get("search")|striptags}}"</h2>
+            <p class="lead">{{ 'post.serachQuery'|trans }} "{{pagination|length}}" posta</p>
         {% else %}
-            <h2>Nie udalo się znależć żadnego rezultatu "{{app.request.query.get("search")|striptags}}".</h2>
-            <a href="{{path('post_index')}}" class="btn btn-outline-primary">Pokazać wszystki posty</a>
+            <h2>{{ 'post.searchNull'|trans }} "{{app.request.query.get("search")|striptags}}".</h2>
+            <a href="{{path('post_index')}}" class="btn btn-outline-primary">{{ 'post.allPost'|trans }}</a>
         {% endif %}
     {% endif %}
     <div class="blog">
@@ -21,7 +21,7 @@
                     <div class="card-header"><h2>{{ post.shortTitle}}</h2></div>
                     <div class="card-body">
                         <div class="card-img" style="background-image: url({{ asset('uploads/posts/' ~ post.img) }})"></div>
-                       <a href="{{ path('post_show',{'id' : post.id}) }}" class="btn btn-outline-primary">Pokaż więcej</a>
+                       <a href="{{ path('post_show',{'id' : post.id}) }}" class="btn btn-outline-primary">{{ 'post.more'|trans }}</a>
                     </div>
                 </div>
             </div>

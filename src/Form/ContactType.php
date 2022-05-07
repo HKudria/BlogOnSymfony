@@ -14,9 +14,17 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\All;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContactType extends AbstractType
 {
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -31,7 +39,7 @@ class ContactType extends AbstractType
                 'required' => true,
             ])
             ->add('phone', NumberType::class, [
-                'invalid_message' => 'contactForm.phoneError',
+                'invalid_message' => $this->translator->trans('contactForm.phoneError'),
                 'label' => 'contactForm.phone',
                 'attr' => [
                     'placeholder' => 'contactForm.phonePlaceholder',
@@ -48,8 +56,8 @@ class ContactType extends AbstractType
                     'class' => 'form-control',
                 ],
                 'constraints' => [
-                    new NotBlank(['message' => 'contactForm.emailMistake']),
-                    new Email(['message' => 'contactForm.emailError']),
+                    new NotBlank(['message' => $this->translator->trans('contactForm.emailMistake')]),
+                    new Email(['message' => $this->translator->trans('contactForm.emailError')]),
                 ],
                 'required' => true,
             ])
