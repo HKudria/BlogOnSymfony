@@ -31,10 +31,6 @@ post_delete:
 
 
 #Home Controller
-home_index:
-    path: /
-    controller: App\Controller\HomeController::index
-
 home_price:
     path: /home/price
     controller: App\Controller\HomeController::price

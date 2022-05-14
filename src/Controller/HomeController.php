@@ -14,6 +14,9 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class HomeController extends AbstractController
 {
+    /**
+     * @Route("/", name="home_index")
+     */
     public function index() : Response
     {
         return $this->render('home.html.twig');
